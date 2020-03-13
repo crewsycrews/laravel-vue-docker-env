@@ -1,0 +1,53 @@
+#!/bin/bash
+if [ -f ./nginx/ssl/server.crt ];
+	then
+  echo "\033[0;33m SSL Certificates already exist. Skipping.. \033[0m" && exit 0;
+else
+
+COMMON_NAME1=${2:-$SERVER_NAME}
+SUBJECT="/C=US/ST=NY/L=NewYork/O=CrewsCorp/OU=GodblessDevOps/CN=$COMMON_NAME1"
+
+mkdir -p ./nginx/ssl
+
+#Generating ROOT pem files
+openssl req -x509 -new -nodes -newkey rsa:2048 \
+	-keyout nginx/ssl/server_rootCA.key -sha256 -days 825 \
+	-out nginx/ssl/server_rootCA.pem -subj "$SUBJECT";
+
+#Generating v3.ext file
+cat <<EOF > ./nginx/ssl/v3.ext
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = $SERVER_NAME
+DNS.2 = $API_SERVER_NAME
+EOF
+
+openssl req -new -newkey rsa:2048 -sha256 -nodes \
+	-newkey rsa:2048 -keyout nginx/ssl/server.key \
+	-subj "$SUBJECT" \
+	-out nginx/ssl/server.csr;
+
+#Generating certificate file
+openssl x509 -req -in nginx/ssl/server.csr \
+	-CA nginx/ssl/server_rootCA.pem \
+	-CAkey nginx/ssl/server_rootCA.key \
+	-CAcreateserial \
+	-out nginx/ssl/server.crt \
+	-days 825 -sha256 -extfile ./nginx/ssl/v3.ext;
+
+#Make browsers trust to newly generated certificates
+if ! which security > /dev/null; then
+        logger -t "$LOGTAG" "$0: Looks like you are not in MacOS. Skipping."
+        exit 0; true
+else
+sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" nginx/ssl/server_rootCA.pem; 2> /dev/null; true
+fi
+fi
+
+#Cleaning up the mess
+rm -f nginx/ssl/v3.ext nginx/ssl/server.csr nginx/ssl/server_rootCA.pem nginx/ssl/server_rootCA.srl nginx/ssl/server_rootCA.key
+exit 0

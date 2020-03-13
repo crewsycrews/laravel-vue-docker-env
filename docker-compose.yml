@@ -1,0 +1,66 @@
+version: '3.7'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ./mysql/dump/:/docker-entrypoint-initdb.d
+    ports:
+      - ${MYSQL_PORT}:3306
+
+  laravel:
+    image: ${APP_NAME}-php:latest
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - type: bind
+        source: ./laravel/src/
+        target: /var/www/laravel/
+    env_file:
+      - ./.env
+    environment:
+      APP_URL: ${SERVER_NAME}
+      DB_CONNECTION: mysql
+      DB_HOST: ${MYSQL_HOST}
+      DB_PORT: 3306
+      DB_DATABASE: ${MYSQL_DATABASE}
+      DB_USERNAME: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+
+  vue:
+    image: ${APP_NAME}-vue:latest
+    volumes:
+      - type: bind
+        source: ./vue/src/
+        target: /opt/vueapp/
+
+  nginx:
+    build: ./nginx/
+    volumes:
+      - ./nginx/configs/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/configs/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl/:/etc/nginx/ssl/
+      # - ./nginx/configs/.htpasswd:/etc/nginx/.htpasswd
+      - type: bind
+        source: ./laravel/src/
+        target: /var/www/laravel/
+      - type: bind
+        source: ./vue/src/
+        target: /var/www/vue/
+    ports:
+      - ${WEB_SRV_PORT}:80
+      - ${WEB_SRV_SSL_PORT}:443
+    depends_on:
+      - laravel
+
+  redis:
+    image: redis:3.2-alpine
+    restart: on-failure
+
+volumes:
+  mysql_data:

@@ -1,0 +1,44 @@
+# local and IDE filesystem
+.DS_Store
+.idea/
+
+# docker environment and frameworks parameters
+*.pem
+.env
+vault
+laravel/src/.composer
+laravel/src/.bash_history
+laravel/src/auth.json
+laravel/src/node_modules
+laravel/src/public/hot
+laravel/src/public/storage
+laravel/src/storage/*.key
+laravel/src/vendor
+laravel/src/.env
+laravel/src/.env.backup
+laravel/src/.phpunit.result.cache
+laravel/src/Homestead.json
+laravel/src/Homestead.yaml
+laravel/src/npm-debug.log
+laravel/src/yarn-error.log
+laravel/src/public/js
+laravel/src/public/css
+
+
+# mysql container
+mysql/dump/
+mysql/data/
+
+# nginx container
+nginx/configs/conf.d/
+nginx/ssl/server.key
+nginx/ssl/server.crt
+nginx/configs/.htpasswd
+!nginx/ssl/server-prod.key
+!nginx/ssl/server-prod.crt
+
+# Terraform files
+terraform/.terraform
+terraform/*.tfstate*
+terraform/terraform.tfvars
+terraform/terraform.tfplan
