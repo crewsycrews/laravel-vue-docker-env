@@ -1,4 +1,4 @@
-# Scaffolded docker env for laravel 7.0 + vue 2.6.11 application
+# Scaffolded docker env for laravel 6.2 + vue 2.6.11 application
 ## Instructions:
  - copy .env.example into .env file and pass the missing variables(see comments in .env file)
  - `make docker-env`
