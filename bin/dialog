@@ -6,5 +6,6 @@ echo "" 1>&2
 	case $yn in
 		Yes ) break;;
 		No ) exit;;
+		*) exit;;
 	esac
 done
