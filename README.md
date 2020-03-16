@@ -4,7 +4,7 @@
  - `make docker-env`
  - Check the `SERVER_NAME` and `API_SERVER_NAME` urls provided earlier in .env file with your browser.
 
-You can find possible commands inside `makefile`. Just run `make` inside project folder
+You can find possible commands inside `makefile`. Just run `make` inside project's directory
 
 ## Frequently used commands:
 
