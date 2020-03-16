@@ -131,8 +131,14 @@ nginx-config: ssl
 
 # Generate SSL sertificates for our sites
 generate-ssl:
-	@echo "\n\033[0;33mGenerating SSL certificate\033[0m"
+	@echo "\n\033[0;33mGenerating SSL certificates\033[0m"
 	@. ./bin/ssl
+
+remove-ssl:
+	@echo "\n\033[0;33mRemoving SSL certificates\033[0m"
+	@rm -Rf ./nginx/ssl/server*
+
+reissue-ssl: remove-ssl generate-ssl
 
 # alias
 ssl: generate-ssl
