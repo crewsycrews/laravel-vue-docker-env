@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
+use Illuminate\Http\Request;
+
+Route::get('/', function (Request $request) {
     return view('welcome');
 });

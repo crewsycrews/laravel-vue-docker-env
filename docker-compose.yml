@@ -21,8 +21,7 @@ services:
       - type: bind
         source: ./laravel/src/
         target: /var/www/laravel/
-    env_file:
-      - ./.env
+      - ./laravel/custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini
     environment:
       APP_URL: ${SERVER_NAME}
       DB_CONNECTION: mysql

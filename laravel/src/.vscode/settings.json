@@ -2,5 +2,10 @@
     "files.watcherExclude": {
         "**/.git/objects/**": true,
         "**/.git/subtree-cache/**": true,
-    }
+    },
+    // "phpcbf.executablePath": "./vendor/bin/phpcbf",
+    // "phpcbf.documentFormattingProvider": true,
+    // "[php]": {
+    //     "editor.defaultFormatter": "persoderlind.vscode-phpcbf"
+    // }
 }
