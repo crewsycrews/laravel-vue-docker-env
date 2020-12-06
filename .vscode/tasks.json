@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docker: first setup",
+      "type": "shell",
+      "command": "make docker-env",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: start",
+      "type": "shell",
+      "command": "make up",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: stop",
+      "type": "shell",
+      "command": "make down",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: restart",
+      "type": "shell",
+      "command": "make restart",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: logs",
+      "type": "shell",
+      "command": "make logs",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: status",
+      "type": "shell",
+      "command": "make status",
+      "problemMatcher": []
+    }
+  ]
+}

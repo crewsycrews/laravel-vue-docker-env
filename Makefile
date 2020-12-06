@@ -8,6 +8,7 @@ START = docker-compose up -d
 STOP = docker-compose stop
 LOGS = docker-compose logs
 EXEC = docker-compose exec
+BUILD = docker-compose build
 STATUS = docker-compose -f docker-compose.yml ps
 
 # Spin up docker-env
@@ -21,7 +22,7 @@ build-laravel:
 	-t ${APP_NAME}-php:latest ./laravel
 
 build-vue:
-	@docker build \
+	@docker build --no-cache \
 	-t ${APP_NAME}-vue:latest ./vue
 
 build-nginx: nginx-config ssl
@@ -71,15 +72,19 @@ reload:
 
 # run laravel seeds
 seeds:
-	@$(RUN) -u www-data laravel php artisan db:seed
+	@$(RUN) laravel php artisan db:seed
+
+# run laravel seeds
+generate-app-key:
+	@$(RUN) laravel php artisan key:generate
 
 # install php dependancies
 composer-install:
-	@$(RUN) -T -u www-data laravel composer install
+	@$(RUN) -T laravel composer install
 
 # run laravel migrations
 migrations:
-	@$(RUN) -u www-data laravel php artisan migrate
+	@$(RUN) laravel php artisan migrate
 
 # install js dependancies
 yarn-install:

@@ -48,6 +48,14 @@ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.key
 fi
 fi
 
+if ! update-ca-certificates > /dev/null; then
+        logger -t "$LOGTAG" "$0: Looks like you are not in Ubuntu OS. Skipping."
+        exit 0; true
+else
+sudo cp nginx/ssl/server_rootCA.pem "/usr/local/share/ca-certificates/$SERVER_NAME.crt"
+sudo update-ca-certificates
+fi
+
 #Cleaning up the mess
 rm -f nginx/ssl/v3.ext nginx/ssl/server.csr nginx/ssl/server_rootCA.pem nginx/ssl/server_rootCA.srl nginx/ssl/server_rootCA.key
 exit 0

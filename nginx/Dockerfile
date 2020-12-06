@@ -12,7 +12,5 @@ COPY configs/conf.d/ /etc/nginx/conf.d/
 COPY ssl/server.crt /etc/nginx/ssl/server.crt
 COPY ssl/server.key /etc/nginx/ssl/server.key
 
-COPY --chown=nginx --from=time-management-app-php:latest /var/www/laravel/ /var/www/laravel/
-COPY --chown=nginx --from=time-management-app-vue:latest /opt/vueapp/ /var/www/vueapp/
 RUN chown -R nginx /etc/nginx/ssl/server.*
 RUN chmod 600 /etc/nginx/ssl/server.*

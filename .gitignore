@@ -31,11 +31,8 @@ mysql/data/
 
 # nginx container
 nginx/configs/conf.d/
-nginx/ssl/server.key
-nginx/ssl/server.crt
+nginx/ssl/*
 nginx/configs/.htpasswd
-!nginx/ssl/server-prod.key
-!nginx/ssl/server-prod.crt
 
 # Terraform files
 terraform/.terraform

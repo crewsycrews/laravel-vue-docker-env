@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   db:
     image: mysql:5.7
@@ -51,7 +51,7 @@ services:
         target: /var/www/laravel/
       - type: bind
         source: ./vue/src/
-        target: /var/www/vue/
+        target: /var/www/vueapp/
     ports:
       - ${WEB_SRV_PORT}:80
       - ${WEB_SRV_SSL_PORT}:443

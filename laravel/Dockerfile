@@ -3,9 +3,7 @@ ENV APP_ENV=prod
 ENV UNAME=ubuntu
 ENV UID=1000
 ENV GID=1000
-RUN groupadd -g $GID -o $UNAME
-RUN useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
-RUN usermod -a -G www-data $UNAME
+RUN useradd -G www-data,root -m -u $UID -o $UNAME
 RUN set -ex \
     && apt-get clean && apt-get update \
     && apt-get install -my wget gnupg \
@@ -28,16 +26,18 @@ RUN set -ex \
     && docker-php-ext-install ctype \
     && docker-php-ext-install json \
     && docker-php-ext-install mbstring \
-    && docker-php-ext-install gd \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    && docker-php-ext-install gd
+
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN set -ex; \
     pecl install xdebug; \
     docker-php-ext-enable xdebug; \
     touch /var/log/cron.log
 RUN mkdir -p /var/www/laravel/
-RUN chown -R www-data:www-data /var/www/&& chmod -R 755 /var/www/
 WORKDIR /var/www/laravel
-COPY --chown=www-data:www-data custom-php.ini /usr/local/etc/php/conf.d/
-COPY --chown=www-data:www-data ./src/ /var/www/laravel/
-USER www-data
+COPY --chown=$UNAME:$UNAME custom-php.ini /usr/local/etc/php/conf.d/
+COPY --chown=$UNAME:$UNAME ./src/ /var/www/laravel/
+RUN chown -R $UNAME:$UNAME /var/www/ && chmod -R 755 /var/www/
+USER $UNAME
